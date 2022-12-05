@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class MainActivity extends Activity implements AdapterView.OnItemSelectedListener {
+public class  MainActivity extends Activity implements AdapterView.OnItemSelectedListener {
     private static final String TAG = "UsageStatsActivity";
     private static final boolean localLOGV = false;
     private UsageStatsManager mUsageStatsManager;
