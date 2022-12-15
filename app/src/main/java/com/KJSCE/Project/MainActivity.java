@@ -29,6 +29,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 
+import org.w3c.dom.Text;
+
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -45,6 +47,10 @@ public class  MainActivity extends Activity implements AdapterView.OnItemSelecte
     private LayoutInflater mInflater;
     private UsageStatsAdapter mAdapter;
     private PackageManager mPm;
+    String[] appName =new String[10000];
+    long[] appTime=new long[10000];
+    int count=0;
+
 
     public static class AppNameComparator implements Comparator<UsageStats> {
         private Map<String, String> mAppLabelList;
@@ -81,6 +87,7 @@ public class  MainActivity extends Activity implements AdapterView.OnItemSelecte
         TextView pkgName;
         TextView lastTimeUsed;
         TextView usageTime;
+        TextView carbon;
     }
 
     class UsageStatsAdapter extends BaseAdapter {
@@ -170,6 +177,7 @@ public class  MainActivity extends Activity implements AdapterView.OnItemSelecte
                 holder.pkgName = (TextView) convertView.findViewById(R.id.package_name);
                 holder.lastTimeUsed = (TextView) convertView.findViewById(R.id.last_time_used);
                 holder.usageTime = (TextView) convertView.findViewById(R.id.usage_time);
+                holder.carbon=(TextView) convertView.findViewById(R.id.carbon);
                 convertView.setTag(holder);
             } else {
                 // Get the ViewHolder back to get fast access to the TextView
@@ -182,16 +190,21 @@ public class  MainActivity extends Activity implements AdapterView.OnItemSelecte
             if (pkgStats != null) {
                 String label = mAppLabelMap.get(pkgStats.getPackageName());
                 Log.i(TAG,label);
+                appName[count]=label;
 
                 holder.pkgName.setText(label);
                 holder.lastTimeUsed.setText(DateUtils.formatSameDayTime(pkgStats.getLastTimeUsed(),
                         System.currentTimeMillis(), DateFormat.MEDIUM, DateFormat.MEDIUM));
-                String tag= (String) DateUtils.formatSameDayTime(pkgStats.getLastTimeUsed(),System.currentTimeMillis(), DateFormat.MEDIUM, DateFormat.MEDIUM);
-                Log.i(TAG,tag);
+                String lastTime= (String) DateUtils.formatSameDayTime(pkgStats.getLastTimeUsed(),System.currentTimeMillis(), DateFormat.MEDIUM, DateFormat.MEDIUM);
+                Log.i(TAG,lastTime);
+
                 holder.usageTime.setText(
                         DateUtils.formatElapsedTime(pkgStats.getTotalTimeInForeground() / 1000));
-                tag=DateUtils.formatElapsedTime(pkgStats.getTotalTimeInForeground() / 1000);
-                Log.i(TAG,tag);
+                long tag=pkgStats.getTotalTimeInForeground() / 1000;
+                Log.i(TAG, String.valueOf(tag));
+                appTime[count++]=tag;
+                String CarbonEmission=CarbonCalculation(label,tag);
+                holder.carbon.setText(CarbonEmission);
             } else {
                 Log.w(TAG, "No usage stats info for package:" + position);
             }
@@ -220,6 +233,19 @@ public class  MainActivity extends Activity implements AdapterView.OnItemSelecte
             }
             notifyDataSetChanged();
         }
+    }
+
+    private String CarbonCalculation(String Name, long time) {
+        double  carbon=0;
+         time=time/60;
+         if(Name.equalsIgnoreCase("Youtube"))
+             carbon=time*4.6;
+         else if(Name.equalsIgnoreCase("Google Chrome"))
+             carbon=time*0.84;
+         else if(Name.equalsIgnoreCase("Whatsapp"))
+             carbon=time*0.88;
+         return String.valueOf(carbon);
+
     }
 
     /**
