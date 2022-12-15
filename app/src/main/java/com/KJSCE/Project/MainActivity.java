@@ -60,9 +60,10 @@ public class  MainActivity extends Activity implements AdapterView.OnItemSelecte
     PieChart pieChart;
     Map<String, Long> typeAmountMap;
 
+
     public void chartbana(View view) {
         setContentView(R.layout.piechart);
-        
+
     }
 
     public static class AppNameComparator implements Comparator<UsageStats> {
