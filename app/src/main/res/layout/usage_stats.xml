@@ -10,6 +10,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="chartbana"
+        android:text="Chart" />
+
     <Spinner
         android:id="@+id/typeSpinner"
         android:layout_width="match_parent"
