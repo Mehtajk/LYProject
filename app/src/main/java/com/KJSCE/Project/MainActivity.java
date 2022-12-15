@@ -1,7 +1,7 @@
 package com.KJSCE.Project;
 
 import androidx.appcompat.app.AppCompatActivity;
-
+import com.github.mikephil.charting.charts.PieChart;
 import android.app.Activity;
 import android.app.AppOpsManager;
 import android.app.usage.UsageStats;
@@ -24,6 +24,9 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
@@ -36,8 +39,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 
 public class  MainActivity extends Activity implements AdapterView.OnItemSelectedListener {
@@ -51,6 +57,8 @@ public class  MainActivity extends Activity implements AdapterView.OnItemSelecte
     long[] appTime=new long[10000];
     int count=0;
 
+    PieChart pieChart;
+    Map<String, Long> typeAmountMap;
 
     public static class AppNameComparator implements Comparator<UsageStats> {
         private Map<String, String> mAppLabelList;
@@ -143,7 +151,7 @@ public class  MainActivity extends Activity implements AdapterView.OnItemSelecte
             mAppLabelComparator = new AppNameComparator(mAppLabelMap);
             sortList();
         }
-
+        int i=1;
         @Override
         public int getCount() {
             return mPackageStats.size();
@@ -164,6 +172,7 @@ public class  MainActivity extends Activity implements AdapterView.OnItemSelecte
             // A ViewHolder keeps references to children views to avoid unneccessary calls
             // to findViewById() on each row.
             AppViewHolder holder;
+
 
             // When convertView is not null, we can reuse it directly, there is no need
             // to reinflate it. We only inflate a new View when the convertView supplied
@@ -192,6 +201,8 @@ public class  MainActivity extends Activity implements AdapterView.OnItemSelecte
                 Log.i(TAG,label);
                 appName[count]=label;
 
+
+
                 holder.pkgName.setText(label);
                 holder.lastTimeUsed.setText(DateUtils.formatSameDayTime(pkgStats.getLastTimeUsed(),
                         System.currentTimeMillis(), DateFormat.MEDIUM, DateFormat.MEDIUM));
@@ -202,12 +213,17 @@ public class  MainActivity extends Activity implements AdapterView.OnItemSelecte
                         DateUtils.formatElapsedTime(pkgStats.getTotalTimeInForeground() / 1000));
                 long tag=pkgStats.getTotalTimeInForeground() / 1000;
                 Log.i(TAG, String.valueOf(tag));
+               // typeAmountMap.put(label,tag);
                 appTime[count++]=tag;
                 String CarbonEmission=CarbonCalculation(label,tag);
                 holder.carbon.setText(CarbonEmission);
+                Log.i(TAG, String.valueOf(i));
+                i++;
+
             } else {
                 Log.w(TAG, "No usage stats info for package:" + position);
             }
+
             return convertView;
         }
 
@@ -240,11 +256,31 @@ public class  MainActivity extends Activity implements AdapterView.OnItemSelecte
          time=time/60;
          if(Name.equalsIgnoreCase("Youtube"))
              carbon=time*4.6;
-         else if(Name.equalsIgnoreCase("Google Chrome"))
+         else if(Name.equalsIgnoreCase("Chrome"))
              carbon=time*0.84;
          else if(Name.equalsIgnoreCase("Whatsapp"))
              carbon=time*0.88;
-         return String.valueOf(carbon);
+
+         else if(Name.equalsIgnoreCase("Facebook"))
+            carbon=time*0.79;
+
+        else if(Name.equalsIgnoreCase("Reddit"))
+            carbon=time*2.48;
+
+        else if(Name.equalsIgnoreCase("Pinterest"))
+            carbon=time*1.3;
+         else if(Name.equalsIgnoreCase("Netflix"))
+             carbon=time*6.7;
+         else if(Name.equalsIgnoreCase("Zoom"))
+             carbon=time*68;
+         else if(Name.equalsIgnoreCase("Microsoft Teams"))
+             carbon=time*1.2;
+         else if(Name.equalsIgnoreCase("Instagram"))
+             carbon=time*1.06;
+         else if(Name.equalsIgnoreCase("Gmail"))
+             carbon=time*0.06;
+
+        return String.valueOf(carbon);
 
     }
 
@@ -267,7 +303,14 @@ public class  MainActivity extends Activity implements AdapterView.OnItemSelecte
         ListView listView = (ListView) findViewById(R.id.pkg_list);
         mAdapter = new UsageStatsAdapter();
         listView.setAdapter(mAdapter);
+
+        pieChart = findViewById(R.id.pieChart_view);
     }
+
+
+
+
+
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

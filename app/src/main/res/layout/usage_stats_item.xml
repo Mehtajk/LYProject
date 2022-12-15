@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:maxLines="1"
         android:paddingEnd="6dip"
-        android:paddingStart="12dip"
+        android:paddingStart="6dip"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
@@ -37,8 +37,8 @@
         android:layout_height="wrap_content"
         android:maxLines="1"
         android:paddingEnd="6dip"
-        android:paddingStart="12dip"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:paddingStart="6dip"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <TextView
         android:id="@+id/usage_time"
@@ -46,14 +46,14 @@
         android:layout_height="wrap_content"
         android:maxLines="1"
         android:paddingEnd="6dip"
-        android:paddingStart="12dip"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:paddingStart="6dip"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
     <TextView
         android:id="@+id/carbon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:maxLines="1"
         android:paddingEnd="6dip"
-        android:paddingStart="12dip"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:paddingStart="6dip"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 </LinearLayout>
